@@ -16,7 +16,7 @@ HEADERS = {
     'Referer': 'https://mangalib.org/',
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36'
 }
-BASE_IMG_URL = "https://img3.mixlib.me"
+BASE_IMG_URL = "https://img3.cdnlibs.org"
 
 def get_chapters_list(url):
     with console.status("[bold blue]Получаю полный список глав...[/bold blue]", spinner="dots"):
@@ -159,7 +159,9 @@ def main():
                         if url_part.startswith('//'): url_part = url_part[1:]
                         f_url = BASE_IMG_URL + (url_part if url_part.startswith('/') else '/' + url_part)
                         ext = url_part.split('.')[-1].split('?')[0] # Очистка расширения
-                        all_download_tasks.append((f_url, os.path.join(folder, f"{i+1:03d}.{ext}")))
+                        dest_path = os.path.join(folder, f"{i+1:03d}.{ext}")
+                        if not os.path.exists(dest_path):
+                            all_download_tasks.append((f_url, dest_path))
                     
                     parse_progress.advance(parse_task)
                     time.sleep(random.uniform(2.5, 5.0))
